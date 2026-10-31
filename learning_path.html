@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Trilha visual de aprendizagem sobre segurança de APIs com Spring Security.">
+  <title>Trilha Spring Security</title>
+  <style>
+    :root {
+      --ink: #10233f;
+      --muted: #5c6c7e;
+      --paper: #f5f7f3;
+      --card: #ffffff;
+      --line: #dce4df;
+      --navy: #102a43;
+      --blue: #1f5f8b;
+      --green: #23a36d;
+      --green-soft: #dff5ea;
+      --amber: #ecaa3c;
+      --red: #d55b56;
+      --shadow: 0 18px 50px rgba(16, 42, 67, .09);
+      --radius: 22px;
+    }
+
+    [data-theme="dark"] {
+      --ink: #e8f0f5;
+      --muted: #a9bac8;
+      --paper: #0b1725;
+      --card: #122337;
+      --line: #294056;
+      --navy: #07121e;
+      --blue: #69b4e4;
+      --green: #49c98f;
+      --green-soft: #173f34;
+      --amber: #f2bc5c;
+      --red: #ee837e;
+      --shadow: 0 18px 50px rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    a { color: var(--blue); text-underline-offset: 3px; }
+    a:hover { color: var(--green); }
+    button, input { font: inherit; }
+    code { font-family: "Cascadia Code", Consolas, monospace; }
+    :focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 540px;
+      color: #fff;
+      background: var(--navy);
+      display: grid;
+      align-items: center;
+    }
+    .hero::before, .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      opacity: .85;
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 520px; height: 520px; right: -170px; top: -220px;
+      border: 80px solid rgba(35, 163, 109, .3);
+    }
+    .hero::after {
+      width: 300px; height: 300px; left: 48%; bottom: -210px;
+      border: 62px solid rgba(31, 95, 139, .65);
+    }
+    .hero-inner {
+      width: min(1180px, calc(100% - 40px));
+      margin: auto;
+      padding: 76px 0;
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 64px;
+      align-items: end;
+    }
+    .eyebrow {
+      display: inline-flex;
+      gap: 9px;
+      align-items: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      color: #cce8dc;
+      background: rgba(35, 163, 109, .16);
+      border: 1px solid rgba(96, 220, 162, .34);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #4dd49b; }
+    h1 {
+      margin: 20px 0 18px;
+      max-width: 850px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      line-height: .96;
+      letter-spacing: -.055em;
+      font-weight: 600;
+    }
+    .hero-copy { max-width: 700px; color: #c9d7e4; font-size: clamp(1rem, 2vw, 1.22rem); }
+    .hero-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 30px; }
+    .hero-meta span { padding: 8px 12px; border: 1px solid rgba(255,255,255,.17); border-radius: 8px; color: #d9e5ee; font-size: .88rem; }
+    .hero-card {
+      border: 1px solid rgba(255,255,255,.17);
+      border-radius: var(--radius);
+      padding: 26px;
+      background: rgba(255,255,255,.07);
+      backdrop-filter: blur(14px);
+    }
+    .hero-card strong { display: block; font-size: 2.5rem; color: #56d59d; line-height: 1; margin-bottom: 8px; }
+    .hero-card p { margin: 0; color: #d2dde7; }
+    .progress-track { height: 8px; background: rgba(255,255,255,.15); border-radius: 99px; overflow: hidden; margin-top: 20px; }
+    .progress-bar { height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, #3fc98d, #8ae5bd); transition: width .35s ease; }
+
+    .top-actions { position: absolute; z-index: 4; top: 22px; right: max(20px, calc((100vw - 1180px) / 2)); display: flex; gap: 8px; }
+    .icon-button {
+      min-width: 42px; height: 42px; padding: 0 12px;
+      border-radius: 12px; border: 1px solid rgba(255,255,255,.22);
+      color: #fff; background: rgba(255,255,255,.08); cursor: pointer;
+    }
+
+    .layout {
+      width: min(1240px, calc(100% - 36px));
+      margin: -42px auto 80px;
+      position: relative;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+    }
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .sidebar-title { margin: 0 0 14px; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .13em; font-weight: 900; }
+    .nav-link { display: flex; gap: 10px; align-items: center; padding: 9px 8px; color: var(--muted); text-decoration: none; border-radius: 9px; font-size: .9rem; }
+    .nav-link:hover, .nav-link.active { color: var(--ink); background: var(--green-soft); }
+    .nav-link span { display: grid; place-items: center; width: 25px; height: 25px; flex: 0 0 25px; border: 1px solid var(--line); border-radius: 50%; font-size: .72rem; font-weight: 800; }
+    .nav-link.active span { color: #fff; background: var(--green); border-color: var(--green); }
+    .sidebar-note { margin: 20px 0 0; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .78rem; }
+
+    main { min-width: 0; }
+    .intro-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 34px; }
+    .mini-card { padding: 25px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); box-shadow: var(--shadow); }
+    .mini-card .number { color: var(--green); font: 600 2.6rem/1 Georgia, serif; }
+    .mini-card h2 { margin: 11px 0 6px; font-size: 1rem; }
+    .mini-card p { margin: 0; color: var(--muted); font-size: .88rem; }
+
+    .stage {
+      margin: 0 0 26px;
+      padding: clamp(24px, 5vw, 48px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .stage-header { display: flex; gap: 22px; align-items: flex-start; margin-bottom: 28px; }
+    .stage-number { display: grid; place-items: center; flex: 0 0 58px; height: 58px; border-radius: 16px; background: var(--green-soft); color: var(--green); font: 700 1.4rem Georgia, serif; }
+    .stage-kicker { margin: 0 0 4px; color: var(--green); font-size: .75rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .stage h2 { margin: 0; font: 600 clamp(1.7rem, 4vw, 2.5rem)/1.12 Georgia, serif; letter-spacing: -.02em; }
+    .lead { color: var(--muted); font-size: 1.04rem; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .concept { padding: 22px; border-radius: 16px; background: var(--paper); border-left: 4px solid var(--blue); }
+    .concept.green { border-left-color: var(--green); }
+    .concept h3 { margin: 0 0 8px; font-size: 1rem; }
+    .concept p { margin: 0; color: var(--muted); }
+    .callout { margin: 22px 0; padding: 20px 22px; border-radius: 15px; background: var(--green-soft); border: 1px solid color-mix(in srgb, var(--green) 28%, transparent); }
+    .callout strong { color: var(--green); }
+    .flow { display: flex; align-items: center; gap: 8px; padding: 22px; overflow-x: auto; border-radius: 16px; background: var(--navy); color: #fff; }
+    .flow span { white-space: nowrap; padding: 9px 12px; border-radius: 9px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.14); }
+    .flow b { color: #59d8a1; }
+    pre { padding: 22px; border-radius: 15px; background: #0b1d2e; color: #dce8f1; overflow: auto; font-size: .86rem; line-height: 1.7; }
+
+    table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: .92rem; }
+    th, td { padding: 14px 13px; text-align: left; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; }
+    .badge { display: inline-block; padding: 5px 9px; border-radius: 999px; font-size: .74rem; font-weight: 800; }
+    .allow { color: var(--green); background: var(--green-soft); }
+    .deny { color: var(--red); background: color-mix(in srgb, var(--red) 13%, transparent); }
+    .status { font-weight: 900; font-family: "Cascadia Code", Consolas, monospace; }
+    .s401 { color: var(--amber); }
+    .s403 { color: var(--red); }
+
+    .questions, .resources { margin: 24px 0 0; padding: 0; list-style: none; }
+    .questions li { position: relative; padding: 12px 12px 12px 34px; border-bottom: 1px dashed var(--line); }
+    .questions li::before { content: "?"; position: absolute; left: 5px; color: var(--green); font-weight: 900; }
+    .resources { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .resources a { display: block; height: 100%; padding: 14px; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; background: var(--paper); }
+    .resources a:hover { transform: translateY(-2px); border-color: var(--green); }
+    .resources small { display: block; color: var(--muted); margin-top: 4px; }
+
+    .task { margin-top: 24px; padding: 20px; border: 1px dashed var(--green); border-radius: 15px; }
+    .task h3 { margin: 0 0 6px; font-size: 1rem; color: var(--green); }
+    .task p { margin: 0; color: var(--muted); }
+
+    .session-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .check-item { display: flex; gap: 11px; align-items: flex-start; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); cursor: pointer; }
+    .check-item input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--green); }
+    .check-item:has(input:checked) { opacity: .68; }
+    .check-item:has(input:checked) span { text-decoration: line-through; }
+    .check-item small { display: block; color: var(--muted); }
+
+    .footer { padding: 40px 20px 60px; text-align: center; color: var(--muted); font-size: .86rem; }
+    .footer strong { color: var(--ink); }
+    .mobile-menu { display: none; }
+
+    @media (max-width: 940px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 26px; }
+      .hero-card { max-width: 430px; }
+      .layout { grid-template-columns: 1fr; margin-top: -28px; }
+      .sidebar { display: none; position: fixed; z-index: 20; inset: 72px 16px auto; max-height: calc(100vh - 90px); overflow: auto; }
+      .sidebar.open { display: block; }
+      .mobile-menu { display: inline-block; }
+      .intro-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .hero { min-height: auto; }
+      .hero-inner { padding: 92px 0 60px; }
+      .top-actions { right: 16px; }
+      h1 { font-size: 3.2rem; }
+      .layout { width: min(100% - 22px, 1240px); gap: 18px; }
+      .stage { padding: 24px 18px; }
+      .stage-header { gap: 13px; }
+      .stage-number { flex-basis: 46px; height: 46px; border-radius: 12px; }
+      .two-col, .resources, .session-grid { grid-template-columns: 1fr; }
+      .table-wrap { overflow-x: auto; }
+      th, td { min-width: 105px; padding: 12px 9px; }
+    }
+    @media print {
+      .top-actions, .sidebar { display: none !important; }
+      .hero { min-height: auto; print-color-adjust: exact; }
+      .hero-inner { grid-template-columns: 1fr; padding: 45px 0; }
+      .hero-card { display: none; }
+      .layout { display: block; width: 100%; margin: 20px 0; }
+      .stage { box-shadow: none; break-inside: avoid; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero" id="inicio">
+    <div class="top-actions">
+      <button class="icon-button mobile-menu" id="menuButton" aria-label="Abrir navegação">☰</button>
+      <button class="icon-button" id="themeButton" aria-label="Alternar tema" title="Alternar tema">◐</button>
+      <button class="icon-button" onclick="window.print()" aria-label="Imprimir página" title="Imprimir">⌁ PDF</button>
+    </div>
+    <div class="hero-inner">
+      <div>
+        <span class="eyebrow">Trilha de aprendizagem</span>
+        <h1>Segurança de APIs com Spring Security</h1>
+        <p class="hero-copy">Um percurso prático para compreender os conceitos, investigar o <code>workshop-microservices</code> e construir respostas próprias para a atividade.</p>
+        <div class="hero-meta"><span>7 sessões</span><span>6 etapas conceituais</span><span>Fontes oficiais</span></div>
+      </div>
+      <aside class="hero-card" aria-live="polite">
+        <strong id="progressValue">0%</strong>
+        <p>do roteiro concluído</p>
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+      </aside>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" id="sidebar" aria-label="Navegação da trilha">
+      <p class="sidebar-title">Percurso</p>
+      <a class="nav-link" href="#contexto"><span>0</span>Contexto</a>
+      <a class="nav-link" href="#autenticacao"><span>1</span>Autenticação</a>
+      <a class="nav-link" href="#filtros"><span>2</span>Filtros</a>
+      <a class="nav-link" href="#politica"><span>3</span>Política de acesso</a>
+      <a class="nav-link" href="#status"><span>4</span>401 e 403</a>
+      <a class="nav-link" href="#microservicos"><span>5</span>Microserviços</a>
+      <a class="nav-link" href="#documento"><span>6</span>Documento final</a>
+      <a class="nav-link" href="#checklist"><span>✓</span>Checklist</a>
+      <p class="sidebar-note">Marque as sessões e os itens de revisão. O progresso fica salvo neste navegador.</p>
+    </nav>
+
+    <main>
+      <section class="intro-grid" aria-label="Resumo da estratégia">
+        <article class="mini-card"><span class="number">01</span><h2>Leia</h2><p>Use documentação oficial e materiais gratuitos selecionados.</p></article>
+        <article class="mini-card"><span class="number">02</span><h2>Relacione</h2><p>Conecte cada conceito às operações reais do workshop.</p></article>
+        <article class="mini-card"><span class="number">03</span><h2>Explique</h2><p>Registre a ideia com suas palavras e valide depois.</p></article>
+      </section>
+
+      <section class="stage" id="contexto">
+        <header class="stage-header"><span class="stage-number">0</span><div><p class="stage-kicker">Ponto de partida</p><h2>Conheça o contexto</h2></div></header>
+        <p class="lead">Antes de falar de segurança, examine o <code>workshop-microservices</code>. Descubra quais serviços existem, onde os produtos são administrados, quais rotas estão disponíveis e se há gateway ou serviço de identidade.</p>
+        <div class="callout"><strong>Regra de honestidade técnica:</strong> diferencie o que você observou no projeto do que adotou como hipótese. Se necessário, declare que considera <code>GET /produtos</code>, <code>POST /produtos</code> e <code>DELETE /produtos/{id}</code>.</div>
+        <div class="task"><h3>Evidência de aprendizagem</h3><p>Descreva o fluxo hipotético de uma exclusão de produto, desde o cliente até o serviço responsável.</p></div>
+      </section>
+
+      <section class="stage" id="autenticacao">
+        <header class="stage-header"><span class="stage-number">1</span><div><p class="stage-kicker">Identidade e permissão</p><h2>Autenticação ≠ autorização</h2></div></header>
+        <div class="two-col">
+          <article class="concept"><h3>Autenticação</h3><p>Verifica <strong>quem</strong> faz a requisição por meio de uma credencial válida, como senha ou token.</p></article>
+          <article class="concept green"><h3>Autorização</h3><p>Decide <strong>o que</strong> a identidade pode fazer, usando papéis ou autoridades como <code>LEITOR</code> e <code>ADMIN</code>.</p></article>
+        </div>
+        <p class="lead">No workshop, apresentar credenciais é autenticação. Verificar se o usuário autenticado pode excluir um produto é autorização. A primeira não garante automaticamente a segunda.</p>
+        <ul class="questions"><li>Uma senha correta garante acesso a qualquer operação? Por quê?</li><li>Um usuário pode estar autenticado e ainda receber acesso negado?</li><li>Em qual momento os papéis são avaliados?</li></ul>
+        <ul class="resources">
+          <li><a href="https://docs.spring.io/spring-security/reference/features/authentication/" target="_blank" rel="noreferrer">Authentication<small>Spring Security Reference</small></a></li>
+          <li><a href="https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html" target="_blank" rel="noreferrer">Authorization Architecture<small>Spring Security Reference</small></a></li>
+        </ul>
+        <div class="task"><h3>Produza</h3><p>Escreva dois parágrafos e use um exemplo diferente para cada conceito no serviço de produtos.</p></div>
+      </section>
+
+      <section class="stage" id="filtros">
+        <header class="stage-header"><span class="stage-number">2</span><div><p class="stage-kicker">Proteção das requisições</p><h2>O papel da SecurityFilterChain</h2></div></header>
+        <p class="lead">No suporte Servlet, a requisição atravessa filtros de segurança antes de chegar ao controlador. A <code>SecurityFilterChain</code> reúne os filtros aplicáveis; as regras configuradas decidem o acesso por caminho, método HTTP e condição de segurança.</p>
+        <div class="flow" aria-label="Fluxo de uma requisição"><span>Requisição</span><b>→</b><span>Filtros</span><b>→</b><span>Autenticação</span><b>→</b><span>Autorização</span><b>→</b><span>Controlador</span></div>
+        <pre><code>authorize.requestMatchers(GET, "/produtos/**").permitAll();
+authorize.requestMatchers(POST, "/produtos/**").hasRole("ADMIN");
+authorize.requestMatchers(DELETE, "/produtos/**").hasRole("ADMIN");
+authorize.anyRequest().authenticated();</code></pre>
+        <p class="lead">O código é apenas uma representação conceitual das regras; a atividade não exige implementação.</p>
+        <ul class="questions"><li>Por que a ordem das regras pode alterar o resultado?</li><li>Como <code>permitAll()</code>, <code>authenticated()</code> e <code>hasRole()</code> diferem?</li><li>O que fazer com requisições sem regra específica?</li></ul>
+        <ul class="resources">
+          <li><a href="https://docs.spring.io/spring-security/reference/servlet/architecture.html" target="_blank" rel="noreferrer">Servlet Architecture<small>Filtros e arquitetura oficial</small></a></li>
+          <li><a href="https://spring.io/guides/gs/securing-web/" target="_blank" rel="noreferrer">Securing a Web Application<small>Guia introdutório gratuito</small></a></li>
+        </ul>
+      </section>
+
+      <section class="stage" id="politica">
+        <header class="stage-header"><span class="stage-number">3</span><div><p class="stage-kicker">Menor privilégio</p><h2>Política de acesso</h2></div></header>
+        <p class="lead">Uma proposta coerente libera a consulta ao catálogo, mas restringe alterações ao administrador. O perfil recebe apenas o necessário para exercer sua função.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Operação</th><th>Rota assumida</th><th>Visitante</th><th>LEITOR</th><th>ADMIN</th></tr></thead>
+          <tbody>
+            <tr><td>Consultar</td><td><code>GET /produtos</code></td><td><span class="badge allow">Permitido</span></td><td><span class="badge allow">Permitido</span></td><td><span class="badge allow">Permitido</span></td></tr>
+            <tr><td>Criar</td><td><code>POST /produtos</code></td><td><span class="badge deny">Negado</span></td><td><span class="badge deny">Negado</span></td><td><span class="badge allow">Permitido</span></td></tr>
+            <tr><td>Excluir</td><td><code>DELETE /produtos/{id}</code></td><td><span class="badge deny">Negado</span></td><td><span class="badge deny">Negado</span></td><td><span class="badge allow">Permitido</span></td></tr>
+          </tbody>
+        </table></div>
+        <div class="callout"><strong>Questione a proposta:</strong> se produtos forem informação interna, a consulta pública talvez não seja adequada. Adapte a tabela às rotas e necessidades reais do workshop e justifique cada escolha.</div>
+        <ul class="questions"><li>Um LEITOR deveria consultar lista e item individual?</li><li>A criação poderia pertencer a um papel EDITOR?</li><li>A exclusão deveria ser lógica para preservar o histórico?</li></ul>
+      </section>
+
+      <section class="stage" id="status">
+        <header class="stage-header"><span class="stage-number">4</span><div><p class="stage-kicker">Cenários de acesso</p><h2>401 não é 403</h2></div></header>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Situação</th><th>Identidade válida?</th><th>Permissão?</th><th>Resposta</th></tr></thead>
+          <tbody>
+            <tr><td>Sem credenciais</td><td>Não</td><td>Não avaliada</td><td class="status s401">401</td></tr>
+            <tr><td>Credenciais inválidas</td><td>Não</td><td>Não avaliada</td><td class="status s401">401</td></tr>
+            <tr><td>Autenticado sem permissão</td><td>Sim</td><td>Não</td><td class="status s403">403</td></tr>
+            <tr><td>Autenticado e autorizado</td><td>Sim</td><td>Sim</td><td>A operação prossegue</td></tr>
+          </tbody>
+        </table></div>
+        <div class="two-col">
+          <article class="concept"><h3><span class="status s401">401 Unauthorized</span></h3><p>Falta autenticação válida. O cliente precisa apresentar ou corrigir suas credenciais.</p></article>
+          <article class="concept green"><h3><span class="status s403">403 Forbidden</span></h3><p>A identidade é conhecida, mas não possui a permissão exigida para aquela operação.</p></article>
+        </div>
+        <p class="lead">No Spring Security, falhas de autenticação acionam um <code>AuthenticationEntryPoint</code>; acesso negado a um usuário autenticado é tratado por um <code>AccessDeniedHandler</code>.</p>
+        <ul class="resources">
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/401" target="_blank" rel="noreferrer">401 Unauthorized<small>MDN Web Docs</small></a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/403" target="_blank" rel="noreferrer">403 Forbidden<small>MDN Web Docs</small></a></li>
+        </ul>
+      </section>
+
+      <section class="stage" id="microservicos">
+        <header class="stage-header"><span class="stage-number">5</span><div><p class="stage-kicker">Decisão de arquitetura</p><h2>Uma identidade por serviço?</h2></div></header>
+        <p class="lead">Quando cada microserviço mantém usuários e senhas próprios, a autonomia aparente traz duplicação, inconsistência e maior responsabilidade de segurança.</p>
+        <div class="two-col">
+          <article class="concept"><h3>Dados duplicados</h3><p>Alterar ou bloquear uma conta exige sincronização entre vários bancos, com risco de acessos permanecerem ativos.</p></article>
+          <article class="concept green"><h3>Superfície de ataque</h3><p>Mais serviços armazenam senhas e precisam implementar recuperação, bloqueio, auditoria e proteção corretamente.</p></article>
+          <article class="concept"><h3>Políticas divergentes</h3><p>Regras de senha, papéis e expiração podem variar e produzir comportamentos incompatíveis.</p></article>
+          <article class="concept green"><h3>Operação e experiência</h3><p>Provisionamento, remoção e auditoria ficam mais caros; usuários podem enfrentar várias credenciais.</p></article>
+        </div>
+        <div class="callout"><strong>Pondere:</strong> um provedor de identidade central reduz duplicação e favorece políticas consistentes, mas também precisa de alta disponibilidade, proteção e integração adequada.</div>
+        <div class="task"><h3>Produza</h3><p>Escolha pelo menos dois problemas. Para cada um, descreva causa, consequência no workshop e uma direção de solução.</p></div>
+      </section>
+
+      <section class="stage" id="documento">
+        <header class="stage-header"><span class="stage-number">6</span><div><p class="stage-kicker">Síntese</p><h2>Construa o documento final</h2></div></header>
+        <ol>
+          <li><strong>Capa:</strong> instituição, disciplina, título, nome, turma e data.</li>
+          <li><strong>Introdução:</strong> objetivo e contexto do workshop.</li>
+          <li><strong>Autenticação e autorização:</strong> conceitos e exemplos.</li>
+          <li><strong>Proteção:</strong> papel da <code>SecurityFilterChain</code>.</li>
+          <li><strong>Política:</strong> tabela e justificativas.</li>
+          <li><strong>Cenários:</strong> credenciais, permissões, 401 e 403.</li>
+          <li><strong>Arquitetura:</strong> problemas de cadastros separados.</li>
+          <li><strong>Conclusão e fontes:</strong> síntese, títulos e links consultados.</li>
+        </ol>
+        <div class="callout"><strong>Teste de domínio:</strong> tente explicar cada seção oralmente sem ler. Se travar em um conceito, retorne à etapa correspondente antes de finalizar.</div>
+      </section>
+
+      <section class="stage" id="sessoes">
+        <header class="stage-header"><span class="stage-number">7</span><div><p class="stage-kicker">Plano de execução</p><h2>Sete sessões de estudo</h2></div></header>
+        <div class="session-grid">
+          <label class="check-item"><input type="checkbox" data-progress><span><strong>1. Mapear o workshop</strong><small>Serviços, fluxos e rotas.</small></span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span><strong>2. Estudar identidade</strong><small>Autenticação e autorização.</small></span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span><strong>3. Entender filtros</strong><small>Fluxo e regras HTTP.</small></span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span><strong>4. Criar a política</strong><small>Tabela com justificativas.</small></span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span><strong>5. Diferenciar respostas</strong><small>Cenários 401 e 403.</small></span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span><strong>6. Analisar arquitetura</strong><small>Identidade em microserviços.</small></span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span><strong>7. Redigir e revisar</strong><small>Markdown, fontes e PDF.</small></span></label>
+        </div>
+      </section>
+
+      <section class="stage" id="checklist">
+        <header class="stage-header"><span class="stage-number">✓</span><div><p class="stage-kicker">Antes de entregar</p><h2>Checklist final</h2></div></header>
+        <div class="session-grid">
+          <label class="check-item"><input type="checkbox" data-progress><span>Nome e turma identificados</span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span>Exemplos ligados ao workshop</span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span>Autenticação e autorização diferenciadas</span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span><code>SecurityFilterChain</code> explicada</span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span>Tabela com três perfis e justificativas</span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span>401 e 403 explicados corretamente</span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span>Dois problemas arquiteturais discutidos</span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span>Documentação oficial citada</span></label>
+          <label class="check-item"><input type="checkbox" data-progress><span>PDF aberto e conferido</span></label>
+        </div>
+        <h3>Referências essenciais</h3>
+        <ul class="resources">
+          <li><a href="https://docs.spring.io/spring-security/reference/" target="_blank" rel="noreferrer">Spring Security Reference<small>Documentação oficial</small></a></li>
+          <li><a href="https://spring.io/guides/gs/securing-web/" target="_blank" rel="noreferrer">Securing a Web Application<small>Guia oficial introdutório</small></a></li>
+          <li><a href="https://docs.spring.io/spring-security/reference/servlet/architecture.html" target="_blank" rel="noreferrer">Servlet Architecture<small>Filtros e exceções</small></a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc9110.html" target="_blank" rel="noreferrer">RFC 9110<small>Semântica HTTP</small></a></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer"><strong>Trilha Spring Security</strong><br>Estude, relacione, explique — e só então escreva a versão final.</footer>
+
+  <script>
+    const root = document.documentElement;
+    const themeButton = document.getElementById('themeButton');
+    const savedTheme = localStorage.getItem('learning-theme');
+    if (savedTheme) root.dataset.theme = savedTheme;
+    themeButton.addEventListener('click', () => {
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      localStorage.setItem('learning-theme', next);
+    });
+
+    const boxes = [...document.querySelectorAll('[data-progress]')];
+    const progressBar = document.getElementById('progressBar');
+    const progressValue = document.getElementById('progressValue');
+    const state = JSON.parse(localStorage.getItem('spring-learning-progress') || '{}');
+    boxes.forEach((box, index) => {
+      box.checked = Boolean(state[index]);
+      box.addEventListener('change', () => {
+        state[index] = box.checked;
+        localStorage.setItem('spring-learning-progress', JSON.stringify(state));
+        updateProgress();
+      });
+    });
+    function updateProgress() {
+      const done = boxes.filter(box => box.checked).length;
+      const percent = Math.round((done / boxes.length) * 100);
+      progressBar.style.width = percent + '%';
+      progressValue.textContent = percent + '%';
+    }
+    updateProgress();
+
+    const sidebar = document.getElementById('sidebar');
+    document.getElementById('menuButton').addEventListener('click', () => sidebar.classList.toggle('open'));
+    document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', () => sidebar.classList.remove('open')));
+
+    const sections = [...document.querySelectorAll('main section[id]')];
+    const links = [...document.querySelectorAll('.nav-link')];
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id));
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    sections.forEach(section => observer.observe(section));
+  </script>
+</body>
+</html>

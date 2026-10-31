@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Atividade acadêmica sobre segurança de APIs com Spring Security.">
+  <title>Segurança de APIs com Spring Security</title>
+  <style>
+    :root { --ink:#17263a; --muted:#5e6d7d; --paper:#f1f4f1; --card:#fff; --line:#d9e1dc; --navy:#102a43; --green:#15966a; --soft:#e3f5ed; --amber:#ba7415; --red:#bf4c4c; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.7 Inter,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    a { color:#17628f; text-underline-offset:3px; overflow-wrap:anywhere; }
+    code { padding:.1em .35em; border-radius:5px; background:#edf1f3; font-family:"Cascadia Code",Consolas,monospace; font-size:.9em; }
+    .cover { color:#fff; background:var(--navy); padding:72px 24px 90px; position:relative; overflow:hidden; }
+    .cover::after { content:""; position:absolute; width:420px; height:420px; right:-190px; top:-210px; border:65px solid rgba(46,190,136,.24); border-radius:50%; }
+    .cover-inner { width:min(900px,100%); margin:auto; position:relative; z-index:1; }
+    .tag { display:inline-block; color:#9ee4c7; font-size:.75rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+    h1 { max-width:760px; margin:14px 0 20px; font:600 clamp(2.7rem,7vw,5.4rem)/1 Georgia,serif; letter-spacing:-.045em; }
+    .subtitle { max-width:650px; color:#cad8e4; font-size:1.08rem; }
+    .identity { display:grid; grid-template-columns:repeat(2,minmax(180px,1fr)); gap:12px 28px; max-width:680px; margin-top:38px; padding-top:24px; border-top:1px solid rgba(255,255,255,.18); }
+    .identity div { color:#aabccc; font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; }
+    .identity strong { display:block; margin-top:3px; color:#fff; font-size:.96rem; text-transform:none; letter-spacing:0; }
+    main { width:min(900px,calc(100% - 30px)); margin:-38px auto 70px; position:relative; }
+    .note { margin-bottom:18px; padding:20px 24px; border-left:5px solid var(--green); border-radius:12px; background:var(--soft); box-shadow:0 12px 35px rgba(16,42,67,.07); }
+    article { margin-bottom:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--card); box-shadow:0 15px 42px rgba(16,42,67,.07); }
+    .section-head { display:flex; gap:16px; align-items:center; margin-bottom:22px; }
+    .number { display:grid; place-items:center; flex:0 0 48px; height:48px; color:var(--green); background:var(--soft); border-radius:14px; font:700 1.25rem Georgia,serif; }
+    h2 { margin:0; font:600 clamp(1.55rem,4vw,2.2rem)/1.15 Georgia,serif; letter-spacing:-.02em; }
+    h3 { margin-top:26px; font-size:1rem; }
+    p { margin:0 0 16px; }
+    p:last-child { margin-bottom:0; }
+    .concepts { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:22px 0; }
+    .concept { padding:20px; border:1px solid var(--line); border-radius:14px; background:#f8faf8; }
+    .concept strong { display:block; color:var(--green); margin-bottom:5px; }
+    .table-wrap { overflow-x:auto; margin:22px 0; }
+    table { width:100%; border-collapse:collapse; font-size:.91rem; }
+    th,td { padding:13px 11px; text-align:left; border-bottom:1px solid var(--line); }
+    th { color:var(--muted); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; }
+    .yes,.no { display:inline-block; padding:4px 8px; border-radius:999px; font-size:.74rem; font-weight:800; white-space:nowrap; }
+    .yes { color:var(--green); background:var(--soft); }
+    .no { color:var(--red); background:#fae9e9; }
+    .status-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0; }
+    .status { padding:20px; border-radius:14px; color:#fff; background:var(--navy); }
+    .status b { display:block; margin-bottom:4px; color:#f5c26f; font:700 1.35rem "Cascadia Code",monospace; }
+    .status.danger b { color:#ff9995; }
+    .sources { margin:0; padding-left:20px; }
+    .sources li { margin:10px 0; }
+    .actions { position:fixed; right:20px; bottom:20px; z-index:5; }
+    button { border:0; border-radius:999px; padding:12px 18px; color:#fff; background:var(--green); font-weight:800; cursor:pointer; box-shadow:0 10px 25px rgba(21,150,106,.28); }
+    footer { padding:0 20px 50px; text-align:center; color:var(--muted); font-size:.85rem; }
+    @media (max-width:650px) { .identity,.concepts,.status-grid { grid-template-columns:1fr; } .cover { padding-top:55px; } article { border-radius:15px; } }
+    @media print {
+      @page { size:A4; margin:16mm; }
+      body { background:#fff; font-size:11pt; }
+      .cover { margin:-16mm -16mm 12mm; padding:24mm 16mm; print-color-adjust:exact; }
+      .cover::after,.actions { display:none; }
+      main { width:100%; margin:0; }
+      .note,article { box-shadow:none; break-inside:avoid; }
+      article { padding:8mm; margin-bottom:6mm; }
+      a { color:inherit; text-decoration:none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cover">
+    <div class="cover-inner">
+      <span class="tag">Tarefa 1</span>
+      <h1>Segurança de APIs com Spring Security</h1>
+      <p class="subtitle">Análise aplicada ao contexto do projeto <code>workshop-microservices</code>.</p>
+      <div class="identity">
+        <div>Aluno<strong>[SEU NOME]</strong></div>
+        <div>Turma<strong>[SUA TURMA]</strong></div>
+        <div>Disciplina<strong>[NOME DA DISCIPLINA]</strong></div>
+        <div>Data<strong>[DATA]</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <aside class="note"><strong>Contexto adotado:</strong> considera-se que o serviço de produtos oferece <code>GET /produtos</code>, <code>POST /produtos</code> e <code>DELETE /produtos/{id}</code>. Ajuste os nomes se as rotas reais forem diferentes.</aside>
+
+    <article>
+      <header class="section-head"><span class="number">1</span><h2>Autenticação e autorização</h2></header>
+      <div class="concepts">
+        <div class="concept"><strong>Autenticação: quem é?</strong>Confirma a identidade por uma credencial válida, como senha ou token. No workshop, ocorre quando o sistema valida o token enviado à API.</div>
+        <div class="concept"><strong>Autorização: pode fazer?</strong>Decide quais ações a identidade pode executar. Um <code>LEITOR</code> pode consultar, enquanto somente um <code>ADMIN</code> pode excluir.</div>
+      </div>
+      <p>A autorização acontece depois da autenticação. Portanto, estar autenticado não significa possuir acesso a todas as funções do sistema.</p>
+    </article>
+
+    <article>
+      <header class="section-head"><span class="number">2</span><h2>Proteção das requisições</h2></header>
+      <p>No Spring Security, as requisições passam por filtros antes de alcançar os controladores. A <code>SecurityFilterChain</code> representa a cadeia de filtros aplicável e é configurada com <code>HttpSecurity</code>. Nela, a aplicação define rotas públicas, rotas autenticadas e operações que exigem papéis específicos.</p>
+      <p>As regras podem considerar endereço e método HTTP. Assim, <code>GET /produtos</code> pode ser público, enquanto <code>POST</code> e <code>DELETE</code> exigem <code>ADMIN</code>. Ao encontrar uma regra, o Spring Security verifica a identidade e suas autoridades antes de encaminhar a requisição. Operações não previstas devem exigir autenticação ou ser negadas para evitar acesso acidental.</p>
+    </article>
+
+    <article>
+      <header class="section-head"><span class="number">3</span><h2>Política de acesso</h2></header>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Operação</th><th>Visitante</th><th>LEITOR</th><th>ADMIN</th></tr></thead>
+        <tbody>
+          <tr><td>Consultar produtos (<code>GET</code>)</td><td><span class="yes">Permitido</span></td><td><span class="yes">Permitido</span></td><td><span class="yes">Permitido</span></td></tr>
+          <tr><td>Criar produto (<code>POST</code>)</td><td><span class="no">Negado</span></td><td><span class="no">Negado</span></td><td><span class="yes">Permitido</span></td></tr>
+          <tr><td>Excluir produto (<code>DELETE</code>)</td><td><span class="no">Negado</span></td><td><span class="no">Negado</span></td><td><span class="yes">Permitido</span></td></tr>
+        </tbody>
+      </table></div>
+      <p>A consulta foi liberada porque se considera o catálogo público. O <code>LEITOR</code> consulta, mas não modifica dados. Criação e exclusão ficam com o <code>ADMIN</code>, pois alteram o sistema e podem causar perda de informações. A escolha segue o menor privilégio: cada perfil recebe apenas os acessos necessários. Se os produtos forem internos, a consulta também deve exigir autenticação.</p>
+    </article>
+
+    <article>
+      <header class="section-head"><span class="number">4</span><h2>Cenários de acesso</h2></header>
+      <p>Sem credenciais, uma operação protegida deve responder com <strong>401</strong>. Credenciais inválidas, expiradas ou não verificáveis também produzem <strong>401</strong>, pois não existe uma identidade confirmada.</p>
+      <p>Credenciais válidas sem a permissão necessária produzem <strong>403</strong>. Por exemplo, um <code>LEITOR</code> que tenta executar <code>DELETE /produtos/10</code> foi identificado, mas não pode excluir.</p>
+      <div class="status-grid">
+        <div class="status"><b>401</b>Ausência de autenticação válida. É preciso apresentar ou corrigir as credenciais.</div>
+        <div class="status danger"><b>403</b>Identidade reconhecida, porém sem autorização para a operação.</div>
+      </div>
+      <p>No Spring Security, falhas que exigem autenticação são encaminhadas a um <code>AuthenticationEntryPoint</code>; a negação a um usuário autenticado é tratada por um <code>AccessDeniedHandler</code>.</p>
+    </article>
+
+    <article>
+      <header class="section-head"><span class="number">5</span><h2>Identidade em microserviços</h2></header>
+      <p>Um cadastro de usuários por microserviço causaria <strong>duplicação e inconsistência</strong>. Alterações de senha ou bloqueios precisariam ser repetidos em vários bancos. Se uma atualização falhasse, uma conta desativada poderia continuar acessando parte do sistema.</p>
+      <p>Também aumentaria a <strong>superfície de ataque</strong>. Cada serviço teria de proteger senhas e implementar recuperação de conta, bloqueio, auditoria e defesa contra tentativas de invasão. Uma falha isolada poderia expor credenciais.</p>
+      <p>Outros efeitos seriam políticas divergentes, múltiplos logins e auditoria mais difícil. Um serviço central de identidade reduz duplicações e permite políticas consistentes; os microserviços validam a identidade e aplicam suas regras de autorização. Esse serviço central também precisa ser seguro e altamente disponível.</p>
+    </article>
+
+    <article>
+      <header class="section-head"><span class="number">✓</span><h2>Conclusão</h2></header>
+      <p>O Spring Security separa a confirmação da identidade da decisão sobre permissões. A <code>SecurityFilterChain</code> aplica essas decisões antes que a requisição chegue à API. No workshop, autenticação centralizada, papéis claros e menor privilégio reduzem acessos indevidos e evitam credenciais duplicadas entre microserviços.</p>
+    </article>
+
+    <article>
+      <header class="section-head"><span class="number">↗</span><h2>Fontes consultadas</h2></header>
+      <ul class="sources">
+        <li><strong>Spring Security Reference — Servlet Architecture.</strong> <a href="https://docs.spring.io/spring-security/reference/servlet/architecture.html">docs.spring.io/.../servlet/architecture.html</a></li>
+        <li><strong>Spring Security Reference — Authentication.</strong> <a href="https://docs.spring.io/spring-security/reference/features/authentication/">docs.spring.io/.../features/authentication/</a></li>
+        <li><strong>Spring Security Reference — Authorization Architecture.</strong> <a href="https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html">docs.spring.io/.../authorization/architecture.html</a></li>
+        <li><strong>Spring Guide — Securing a Web Application.</strong> <a href="https://spring.io/guides/gs/securing-web/">spring.io/guides/gs/securing-web/</a></li>
+        <li><strong>MDN Web Docs — 401 Unauthorized.</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/401">developer.mozilla.org/.../401</a></li>
+        <li><strong>MDN Web Docs — 403 Forbidden.</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/403">developer.mozilla.org/.../403</a></li>
+      </ul>
+    </article>
+  </main>
+
+  <div class="actions"><button onclick="window.print()">Imprimir / salvar PDF</button></div>
+  <footer>Atividade acadêmica — Segurança de APIs com Spring Security</footer>
+</body>
+</html>
